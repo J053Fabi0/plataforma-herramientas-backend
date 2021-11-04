@@ -1,0 +1,4 @@
+node_modules
+.env
+Session.vim
+.DS_Store
