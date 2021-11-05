@@ -4,12 +4,21 @@ const categoriesModel = require("../Utils/Models/categoriesModel");
 
 const handleError = require("../Utils/handleError");
 
-const getAllData = async (_, res) => {
+const getAllData = async ({ query: { ids } }, res) => {
   try {
+    ids = ids === "true";
     const result = await categoriesModel.find({}).populate("tags");
-    res.send({ message: result });
+
+    // Filtrar los resultados, para no enviar el createdAt ni otros datos inútiles
+    const message = [];
+    for (let { tags, name, _id: id } of result) {
+      tags = tags.map(({ name, _id: id }) => (ids ? { name, id } : { name }));
+      message.push(ids ? { tags, name, id } : { tags, name });
+    }
+
+    res.send({ message });
   } catch (err) {
-    handleError(res, err, 404);
+    handleError(res, err, 400);
   }
 };
 
@@ -31,7 +40,7 @@ const postCreateCategory = async ({ body: { name, tags } }, res) => {
     await newCategory.save();
     res.send({ message: { categoryID: newCategoryID, tagsIDs } });
   } catch (err) {
-    handleError(res, err, 404);
+    handleError(res, err, 400);
   }
 };
 
@@ -50,7 +59,7 @@ const postCreateTag = async ({ body: { name, category } }, res) => {
 
     res.send({ message: { id: newTagID } });
   } catch (err) {
-    handleError(res, err, 404);
+    handleError(res, err, 400);
   }
 };
 
@@ -63,7 +72,7 @@ const deleteCategory = async ({ body: { id } }, res) => {
 
     res.status(204).send();
   } catch (err) {
-    handleError(res, err, 404);
+    handleError(res, err, 400);
   }
 };
 
@@ -84,7 +93,7 @@ const deleteTag = async ({ body: { id } }, res) => {
 
     res.status(204).send();
   } catch (err) {
-    handleError(res, err, 404);
+    handleError(res, err, 400);
   }
 };
 
@@ -94,7 +103,7 @@ const updateCategory = async ({ body: { id, ...updates } }, res) => {
 
     res.send();
   } catch (err) {
-    handleError(res, err, 404);
+    handleError(res, err, 400);
   }
 };
 
@@ -104,7 +113,7 @@ const updateTag = async ({ body: { id, ...updates } }, res) => {
 
     res.send();
   } catch (err) {
-    handleError(res, err, 404);
+    handleError(res, err, 400);
   }
 };
 
