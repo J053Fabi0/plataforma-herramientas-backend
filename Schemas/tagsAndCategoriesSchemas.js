@@ -1,8 +1,8 @@
 const Joi = require("joi");
 const validateRequest = require("../Utils/validateRequest");
 
-const tagNameSchema = Joi.string().max(30).required();
-const categoryNameSchema = Joi.string().max(15).required();
+const tagNameSchema = Joi.string().max(13).required();
+const categoryNameSchema = Joi.string().max(13).required();
 const ID_schema = Joi.string().hex().case("lower").length(24);
 
 const postCreateCategory = (req, res, next) => {
