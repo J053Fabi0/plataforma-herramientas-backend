@@ -18,7 +18,7 @@ const postCreateTag = (req, res, next) => {
     category: ID_schema.required(),
     cards: Joi.array().items(ID_schema).default([]),
   });
-  const testResult = validateRequest(!next);
+  const testResult = validateRequest(req, res, next, schema);
 
   if (!next) return testResult;
 };
