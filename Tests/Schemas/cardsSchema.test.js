@@ -1,6 +1,28 @@
 const cardsSchema = require("../../Schemas/cardsSchema");
 
 describe("Test de cardsSchema.", () => {
+  describe("Test getCard", () => {
+    test("Al dar un ID inválido debe dar un error", () => {
+      const { error } = cardsSchema.getCard({ query: { id: "no válido" } });
+      expect(error).toBeTruthy();
+    });
+    test("Al dar un ID válido no debe haber error", () => {
+      const { error } = cardsSchema.getCard({ query: { id: "618bdcd71f08d709367a381d" } });
+      expect(error).toBeFalsy();
+    });
+  });
+
+  describe("Test deleteCard", () => {
+    test("Al dar un ID inválido debe dar un error", () => {
+      const { error } = cardsSchema.deleteCard({ body: { id: "no válido" } });
+      expect(error).toBeTruthy();
+    });
+    test("Al dar un ID válido no debe haber error", () => {
+      const { error } = cardsSchema.deleteCard({ body: { id: "618bdcd71f08d709367a381d" } });
+      expect(error).toBeFalsy();
+    });
+  });
+
   describe("Test postCreateCard", () => {
     describe("Al poner un dato inválido en 'types'", () => {
       test("Debe dar un error", () => {

@@ -1,6 +1,13 @@
 const Joi = require("joi");
-const { tagNameSchema, url, youtubeURL } = require("./commonSchemas");
+const { tagNameSchema, url, youtubeURL, ID_schema } = require("./commonSchemas");
 const validateRequest = require("../Utils/validateRequest");
+
+const getCard = (req, res, next) => {
+  const schema = Joi.object({ id: ID_schema.required() });
+  const testResult = validateRequest(req, res, next, schema, "query");
+
+  if (!next) return testResult;
+};
 
 const typesPrueba = ["video", "images", "text"];
 const pruebaSchema = Joi.object({
@@ -50,14 +57,23 @@ const postCreateCard = (req, res, next) => {
     description: Joi.string().default(""),
     tags: Joi.array().items(tagNameSchema).default([]),
     prueba: pruebaSchema,
-    site: url,
-    image: url,
+    site: url.default(""),
+    image: url.default(""),
   });
   const testResult = validateRequest(req, res, next, schema);
 
-  if (next === undefined) return testResult;
+  if (!next) return testResult;
+};
+
+const deleteCard = (req, res, next) => {
+  const schema = Joi.object({ id: ID_schema.required() });
+  const testResult = validateRequest(req, res, next, schema);
+
+  if (!next) return testResult;
 };
 
 module.exports = {
+  getCard,
   postCreateCard,
+  deleteCard,
 };
