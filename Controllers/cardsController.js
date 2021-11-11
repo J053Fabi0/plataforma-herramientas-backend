@@ -30,7 +30,7 @@ const getCard = async ({ query: { id } }, res) => {
 
     // Borrar los ids que no son necesarios
     delete cardToReturn.prueba.id;
-    delete cardToReturn.prueba?.video.id;
+    delete cardToReturn.prueba?.video?.id;
 
     // Pasar todos los _id a id
     res.send({ cardToReturn });
